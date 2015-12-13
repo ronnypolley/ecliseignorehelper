@@ -39,6 +39,9 @@ public class EclipseIgnoreHelper extends AbstractMojo {
 
     @Parameter(readonly = true, defaultValue = "${project.basedir}/.classpath")
     private File classpathFile;
+    
+    @Parameter(property="ignoreNotEclipseProjects", defaultValue="true")
+    private boolean ignoreNotEclipseProjects;
 
     private XPathFactory xPathFactory = XPathFactory.newInstance();
 
@@ -61,7 +64,11 @@ public class EclipseIgnoreHelper extends AbstractMojo {
                 throw new MojoExecutionException("error parsing .classpath file (" + classpathFile + ")", e);
             }
         } else {
-            throw new MojoExecutionException("The file .classpath does not exist. Is this a eclipse project?");
+            if (!ignoreNotEclipseProjects) {
+				throw new MojoExecutionException("The file .classpath does not exist. Is this a eclipse project?");
+			} else {
+				getLog().info("The file .classpath does not exist. Processing will be skipped as of ignoreNotEclipseProjects is set to true.");
+			}
         }
     }
 
