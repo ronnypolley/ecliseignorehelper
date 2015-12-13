@@ -8,10 +8,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPathConstants;
@@ -39,12 +37,13 @@ public class EclipseIgnoreHelper extends AbstractMojo {
 
     @Parameter(readonly = true, defaultValue = "${project.basedir}/.classpath")
     private File classpathFile;
-    
-    @Parameter(property="ignoreNotEclipseProjects", defaultValue="true")
+
+    @Parameter(property = "ignoreNotEclipseProjects", defaultValue = "true")
     private boolean ignoreNotEclipseProjects;
 
     private XPathFactory xPathFactory = XPathFactory.newInstance();
 
+    @Override
     public void execute() throws MojoExecutionException {
         getLog().info("Processing: " + classpathFile.toString());
 
@@ -65,10 +64,11 @@ public class EclipseIgnoreHelper extends AbstractMojo {
             }
         } else {
             if (!ignoreNotEclipseProjects) {
-				throw new MojoExecutionException("The file .classpath does not exist. Is this a eclipse project?");
-			} else {
-				getLog().info("The file .classpath does not exist. Processing will be skipped as of ignoreNotEclipseProjects is set to true.");
-			}
+                throw new MojoExecutionException("The file .classpath does not exist. Is this a eclipse project?");
+            } else {
+                getLog().info(
+                        "The file .classpath does not exist. Processing will be skipped as of ignoreNotEclipseProjects is set to true.");
+            }
         }
     }
 
@@ -101,8 +101,7 @@ public class EclipseIgnoreHelper extends AbstractMojo {
         return element;
     }
 
-    private void writeToFile(File file, Document document)
-            throws TransformerFactoryConfigurationError, TransformerConfigurationException, TransformerException {
+    private void writeToFile(File file, Document document) throws TransformerException {
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer = transformerFactory.newTransformer();
         transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
