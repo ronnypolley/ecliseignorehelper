@@ -56,6 +56,8 @@ public class EclipseIgnoreHelper extends AbstractMojo {
 	@Parameter(readonly = true, defaultValue = "${project.basedir}/.classpath")
 	private File classpathFile;
 
+	private XPathFactory xPathFactory = XPathFactory.newInstance();
+
 	public void execute() throws MojoExecutionException {
 		getLog().info("Processing: " + classpathFile.toString());
 
@@ -65,9 +67,8 @@ public class EclipseIgnoreHelper extends AbstractMojo {
 				DocumentBuilder builder = factory.newDocumentBuilder();
 				Document document = builder.parse(classpathFile);
 
-				XPathFactory xPathFactory = XPathFactory.newInstance();
 				for (String string : ignorePaths) {
-					addIgnoreAttribute(document, xPathFactory, string);
+					addIgnoreAttribute(document, string);
 				}
 
 				writeToFile(classpathFile, document);
@@ -80,24 +81,26 @@ public class EclipseIgnoreHelper extends AbstractMojo {
 		}
 	}
 
-	private void addIgnoreAttribute(Document document, XPathFactory xPathFactory, String string)
+	private void addIgnoreAttribute(Document document, String string)
 			throws XPathExpressionException, IOException, TransformerException {
 
 		// entry with matching path
-		Node attributes = (Node) xPathFactory.newXPath().compile("//classpathentry[@path='" + string + "']/attributes")
-				.evaluate(document, XPathConstants.NODE);
+		Node attributes = evaluateXpath(document, "//classpathentry[@path='" + string + "']/attributes");
+		// xpath checking already existing element
+		Node attributeIgnore = evaluateXpath(document,
+				"//classpathentry[@path='" + string + "']/attributes/attribute[@name='ignore_optional_problems']");
 
-		Node attributeIgnore = (Node) xPathFactory.newXPath()
-				.compile("//classpathentry[@path='" + string
-						+ "']/attributes/attribute[@name='ignore_optional_problems']")
-				.evaluate(document, XPathConstants.NODE);
-
+		// only add
 		if (attributeIgnore != null) {
 			getLog().info("Path " + string + " is already set to ignore warnings");
 			return;
 		} else {
 			attributes.appendChild(createIgnoreAttribute(document));
 		}
+	}
+
+	private Node evaluateXpath(Document document, String xpath) throws XPathExpressionException {
+		return (Node) xPathFactory.newXPath().compile(xpath).evaluate(document, XPathConstants.NODE);
 	}
 
 	private Element createIgnoreAttribute(Document document) {
