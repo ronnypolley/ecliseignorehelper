@@ -10,6 +10,18 @@
 	<name>Eclipse Ignore Helper Maven Plugin</name>
 
 	<url>http://random-words.de/projects/eclipseignorehelper</url>
+	
+	<scm>
+		<connection>scm:git:ssh://git@github.com:ronnypolley/ecliseignorehelper.git</connection>
+	</scm>
+	
+	<ciManagement>
+		<system>http://jenkins.random-words.de/</system>
+	</ciManagement>
+	
+	<issueManagement>
+		<system>https://github.com/ronnypolley/ecliseignorehelper/issues</system>
+	</issueManagement>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -136,4 +148,5 @@
 			</build>
 		</profile>
 	</profiles>
+	
 </project>
