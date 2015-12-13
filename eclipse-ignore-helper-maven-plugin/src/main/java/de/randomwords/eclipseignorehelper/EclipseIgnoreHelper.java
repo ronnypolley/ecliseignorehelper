@@ -94,14 +94,14 @@ public class EclipseIgnoreHelper extends AbstractMojo {
         return (Node) xPathFactory.newXPath().compile(xpath).evaluate(document, XPathConstants.NODE);
     }
 
-    private Element createIgnoreAttribute(Document document) {
+    private static Element createIgnoreAttribute(Document document) {
         Element element = document.createElement("attribute");
         element.setAttribute("name", "ignore_optional_problems");
         element.setAttribute("value", "true");
         return element;
     }
 
-    private void writeToFile(File file, Document document) throws TransformerException {
+    private static void writeToFile(File file, Document document) throws TransformerException {
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer = transformerFactory.newTransformer();
         transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
