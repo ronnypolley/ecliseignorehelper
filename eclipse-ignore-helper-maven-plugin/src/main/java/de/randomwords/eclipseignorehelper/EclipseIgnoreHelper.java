@@ -34,77 +34,77 @@ import org.w3c.dom.Node;
 @Mojo(name = "ignorePaths", defaultPhase = LifecyclePhase.PROCESS_SOURCES)
 public class EclipseIgnoreHelper extends AbstractMojo {
 
-	@Parameter(property = "ignorePaths", required = true)
-	private List<String> ignorePaths;
+    @Parameter(property = "ignorePaths", required = true)
+    private List<String> ignorePaths;
 
-	@Parameter(readonly = true, defaultValue = "${project.basedir}/.classpath")
-	private File classpathFile;
+    @Parameter(readonly = true, defaultValue = "${project.basedir}/.classpath")
+    private File classpathFile;
 
-	private XPathFactory xPathFactory = XPathFactory.newInstance();
+    private XPathFactory xPathFactory = XPathFactory.newInstance();
 
-	public void execute() throws MojoExecutionException {
-		getLog().info("Processing: " + classpathFile.toString());
+    public void execute() throws MojoExecutionException {
+        getLog().info("Processing: " + classpathFile.toString());
 
-		if (classpathFile != null && classpathFile.exists()) {
-			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-			try {
-				DocumentBuilder builder = factory.newDocumentBuilder();
-				Document document = builder.parse(classpathFile);
+        if (classpathFile != null && classpathFile.exists()) {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            try {
+                DocumentBuilder builder = factory.newDocumentBuilder();
+                Document document = builder.parse(classpathFile);
 
-				for (String string : ignorePaths) {
-					addIgnoreAttribute(document, string);
-				}
+                for (String string : ignorePaths) {
+                    addIgnoreAttribute(document, string);
+                }
 
-				writeToFile(classpathFile, document);
+                writeToFile(classpathFile, document);
 
-			} catch (Exception e) {
-				throw new MojoExecutionException("error parsing .classpath file (" + classpathFile + ")", e);
-			}
-		} else {
-			throw new MojoExecutionException("The file .classpath does not exist. Is this a eclipse project?");
-		}
-	}
+            } catch (Exception e) {
+                throw new MojoExecutionException("error parsing .classpath file (" + classpathFile + ")", e);
+            }
+        } else {
+            throw new MojoExecutionException("The file .classpath does not exist. Is this a eclipse project?");
+        }
+    }
 
-	private void addIgnoreAttribute(Document document, String string)
-			throws XPathExpressionException, IOException, TransformerException {
+    private void addIgnoreAttribute(Document document, String string)
+            throws XPathExpressionException, IOException, TransformerException {
 
-		// entry with matching path
-		Node attributes = evaluateXpath(document, "//classpathentry[@path='" + string + "']/attributes");
-		// xpath checking already existing element
-		Node attributeIgnore = evaluateXpath(document,
-				"//classpathentry[@path='" + string + "']/attributes/attribute[@name='ignore_optional_problems']");
+        // entry with matching path
+        Node attributes = evaluateXpath(document, "//classpathentry[@path='" + string + "']/attributes");
+        // xpath checking already existing element
+        Node attributeIgnore = evaluateXpath(document,
+                "//classpathentry[@path='" + string + "']/attributes/attribute[@name='ignore_optional_problems']");
 
-		// only add
-		if (attributeIgnore != null) {
-			getLog().info("Path " + string + " is already set to ignore warnings");
-			return;
-		} else {
-			attributes.appendChild(createIgnoreAttribute(document));
-		}
-	}
+        // only add
+        if (attributeIgnore != null) {
+            getLog().info("Path " + string + " is already set to ignore warnings");
+            return;
+        } else {
+            attributes.appendChild(createIgnoreAttribute(document));
+        }
+    }
 
-	private Node evaluateXpath(Document document, String xpath) throws XPathExpressionException {
-		return (Node) xPathFactory.newXPath().compile(xpath).evaluate(document, XPathConstants.NODE);
-	}
+    private Node evaluateXpath(Document document, String xpath) throws XPathExpressionException {
+        return (Node) xPathFactory.newXPath().compile(xpath).evaluate(document, XPathConstants.NODE);
+    }
 
-	private Element createIgnoreAttribute(Document document) {
-		Element element = document.createElement("attribute");
-		element.setAttribute("name", "ignore_optional_problems");
-		element.setAttribute("value", "true");
-		return element;
-	}
+    private Element createIgnoreAttribute(Document document) {
+        Element element = document.createElement("attribute");
+        element.setAttribute("name", "ignore_optional_problems");
+        element.setAttribute("value", "true");
+        return element;
+    }
 
-	private void writeToFile(File file, Document document)
-			throws TransformerFactoryConfigurationError, TransformerConfigurationException, TransformerException {
-		TransformerFactory transformerFactory = TransformerFactory.newInstance();
-		Transformer transformer = transformerFactory.newTransformer();
-		transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
-		transformer.setOutputProperty(OutputKeys.METHOD, "xml");
-		transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-		transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-		transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
-		DOMSource source = new DOMSource(document);
-		StreamResult result = new StreamResult(file);
-		transformer.transform(source, result);
-	}
+    private void writeToFile(File file, Document document)
+            throws TransformerFactoryConfigurationError, TransformerConfigurationException, TransformerException {
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        Transformer transformer = transformerFactory.newTransformer();
+        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
+        transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+        transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+        DOMSource source = new DOMSource(document);
+        StreamResult result = new StreamResult(file);
+        transformer.transform(source, result);
+    }
 }
