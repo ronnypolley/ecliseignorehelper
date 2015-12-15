@@ -10,26 +10,36 @@
 	<name>Eclipse Ignore Helper Maven Plugin</name>
 
 	<url>http://random-words.de/projects/eclipseignorehelper</url>
-	
+
 	<scm>
 		<connection>scm:git:ssh://git@github.com:ronnypolley/ecliseignorehelper.git</connection>
 	</scm>
-	
+
 	<ciManagement>
 		<system>http://jenkins.random-words.de/</system>
 	</ciManagement>
-	
+
 	<issueManagement>
 		<system>https://github.com/ronnypolley/ecliseignorehelper/issues</system>
 	</issueManagement>
 
+	<licenses>
+		<license>
+			<name>Eclipse Public License - v 1.0</name>
+			<url>https://www.eclipse.org/legal/epl-v10.html</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		
+
 		<!-- java version -->
 		<java.version>1.6</java.version>
 	</properties>
-	
+
+
+
 	<developers>
 		<developer>
 			<id>rpolley</id>
@@ -37,7 +47,7 @@
 			<email>ronnypolley@googlemail.com</email>
 		</developer>
 	</developers>
-	
+
 	<inceptionYear>2015</inceptionYear>
 
 	<dependencies>
@@ -73,6 +83,7 @@
 
 	<build>
 		<plugins>
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-plugin-plugin</artifactId>
@@ -96,7 +107,7 @@
 					</execution>
 				</executions>
 			</plugin>
-			
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -148,5 +159,5 @@
 			</build>
 		</profile>
 	</profiles>
-	
+
 </project>
