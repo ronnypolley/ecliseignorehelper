@@ -20,7 +20,8 @@
 	</ciManagement>
 
 	<issueManagement>
-		<system>https://github.com/ronnypolley/ecliseignorehelper/issues</system>
+		<system>GitHub</system>
+		<url>https://github.com/ronnypolley/ecliseignorehelper/issues</url>
 	</issueManagement>
 
 	<licenses>
@@ -37,8 +38,6 @@
 		<!-- java version -->
 		<java.version>1.6</java.version>
 	</properties>
-
-
 
 	<developers>
 		<developer>
@@ -83,7 +82,6 @@
 
 	<build>
 		<plugins>
-
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-plugin-plugin</artifactId>
@@ -109,6 +107,26 @@
 			</plugin>
 
 			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+				<version>1.8</version>
+				<executions>
+					<execution>
+						<id>update license</id>
+						<goals>
+							<goal>update-project-license</goal>
+						</goals>
+						<inherited>false</inherited>
+						<configuration>
+							<organizationName>Ronny Polley</organizationName>
+							<encoding>UTF-8</encoding>
+							<licenseName>epl_v1</licenseName>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.3</version>
@@ -118,12 +136,49 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		
+		<pluginManagement>
+			<plugins>
+				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.codehaus.mojo
+										</groupId>
+										<artifactId>
+											license-maven-plugin
+										</artifactId>
+										<versionRange>
+											[1.8,)
+										</versionRange>
+										<goals>
+											<goal>
+												update-project-license
+											</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 	</build>
 	<profiles>
 		<profile>
 			<id>run-its</id>
 			<build>
-
 				<plugins>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
@@ -155,7 +210,6 @@
 						</executions>
 					</plugin>
 				</plugins>
-
 			</build>
 		</profile>
 	</profiles>
