@@ -213,5 +213,18 @@
 			</build>
 		</profile>
 	</profiles>
+	
+	<distributionManagement>
+		<snapshotRepository>
+			<id>snapshot nexus</id>
+			<name>Random Words Snapshot Repository</name>
+			<url>http://nexus.random-words.de:8081/nexus/content/repositories/snapshots/</url>
+		</snapshotRepository>
+		<repository>
+			<id>release nexus</id>
+			<name>Random Words Release Repository</name>
+			<url>http://nexus.random-words.de:8081/nexus/content/repositories/releases/</url>
+		</repository>
+	</distributionManagement>
 
 </project>
