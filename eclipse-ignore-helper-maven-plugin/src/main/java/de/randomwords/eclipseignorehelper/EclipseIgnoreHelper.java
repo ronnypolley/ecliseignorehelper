@@ -32,97 +32,96 @@ import org.w3c.dom.Node;
 @Mojo(name = "ignorePaths", defaultPhase = LifecyclePhase.PROCESS_SOURCES)
 public class EclipseIgnoreHelper extends AbstractMojo {
 
-    private static final String CLASSPATHENTRY_PATH = "//classpathentry[@path='";
+	@Parameter(property = "ignorePaths", required = true)
+	private List<String> ignorePaths;
 
-    @Parameter(property = "ignorePaths", required = true)
-    private List<String> ignorePaths;
+	@Parameter(readonly = true, defaultValue = "${project.basedir}/.classpath")
+	private File classpathFile;
 
-    @Parameter(readonly = true, defaultValue = "${project.basedir}/.classpath")
-    private File classpathFile;
+	@Parameter(property = "ignoreNotEclipseProjects", defaultValue = "true")
+	private boolean ignoreNotEclipseProjects;
 
-    @Parameter(property = "ignoreNotEclipseProjects", defaultValue = "true")
-    private boolean ignoreNotEclipseProjects;
+	private XPathFactory xPathFactory = XPathFactory.newInstance();
 
-    private XPathFactory xPathFactory = XPathFactory.newInstance();
+	@Override
+	public void execute() throws MojoExecutionException {
+		getLog().info("Processing: " + classpathFile.toString());
 
-    @Override
-    public void execute() throws MojoExecutionException {
-        getLog().info("Processing: " + classpathFile.toString());
+		if ((classpathFile != null) && classpathFile.exists()) {
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			try {
+				DocumentBuilder builder = factory.newDocumentBuilder();
+				Document document = builder.parse(classpathFile);
 
-        if (classpathFile.exists()) {
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            try {
-                DocumentBuilder builder = factory.newDocumentBuilder();
-                Document document = builder.parse(classpathFile);
+				for (String string : ignorePaths) {
+					addIgnoreAttribute(document, string);
+				}
 
-                for (String string : ignorePaths) {
-                    addIgnoreAttribute(document, string);
-                }
+				writeToFile(classpathFile, document);
 
-                writeToFile(classpathFile, document);
+			} catch (Exception e) {
+				throw new MojoExecutionException("error parsing .classpath file (" + classpathFile + ")", e);
+			}
+		} else {
+			if (!ignoreNotEclipseProjects) {
+				throw new MojoExecutionException("The file .classpath does not exist. Is this a eclipse project?");
+			} else {
+				getLog().info(
+				        "The file .classpath does not exist. Processing will be skipped as of ignoreNotEclipseProjects is set to true.");
+			}
+		}
+	}
 
-            } catch (Exception e) {
-                throw new MojoExecutionException("error parsing .classpath file (" + classpathFile + ")", e);
-            }
-        } else {
-            if (!ignoreNotEclipseProjects) {
-                throw new MojoExecutionException("The file .classpath does not exist. Is this a eclipse project?");
-            } else {
-                getLog().info(
-                        "The file .classpath does not exist. Processing will be skipped as of ignoreNotEclipseProjects is set to true.");
-            }
-        }
-    }
+	private void addIgnoreAttribute(Document document, String string)
+	        throws XPathExpressionException, IOException, TransformerException {
 
-    private void addIgnoreAttribute(Document document, String string)
-            throws XPathExpressionException, IOException, TransformerException {
+		// entry with matching path
+		Node attributes = findAttributesNode(document, string);
+		// xpath checking already existing element
+		Node attributeIgnore = evaluateXpath(document,
+		        "//classpathentry[@path='" + string + "']/attributes/attribute[@name='ignore_optional_problems']");
 
-        // entry with matching path
-        Node attributes = findAttributesNode(document, string);
-        // xpath checking already existing element
-        Node attributeIgnore = evaluateXpath(document,
-                CLASSPATHENTRY_PATH + string + "']/attributes/attribute[@name='ignore_optional_problems']");
+		// only add
+		if (attributeIgnore != null) {
+			getLog().info("Path " + string + " is already set to ignore warnings");
+			return;
+		} else {
+			if (attributes == null) {
+				getLog().debug("No additional attributes are currently set for " + string);
+				evaluateXpath(document, "//classpathentry[@path='" + string + "']")
+				        .appendChild(document.createElement("attributes"));
+				attributes = findAttributesNode(document, string);
+			}
+			attributes.appendChild(createIgnoreAttribute(document));
+		}
+	}
 
-        // only add
-        if (attributeIgnore != null) {
-            getLog().info("Path " + string + " is already set to ignore warnings");
-            return;
-        } else {
-            if (attributes == null) {
-                getLog().debug("No additional attributes are currently set for " + string);
-                evaluateXpath(document, CLASSPATHENTRY_PATH + string + "']")
-                        .appendChild(document.createElement("attributes"));
-                attributes = findAttributesNode(document, string);
-            }
-            attributes.appendChild(createIgnoreAttribute(document));
-        }
-    }
+	private Node findAttributesNode(Document document, String string) throws XPathExpressionException {
+		return evaluateXpath(document, "//classpathentry[@path='" + string + "']/attributes");
+	}
 
-    private Node findAttributesNode(Document document, String string) throws XPathExpressionException {
-        return evaluateXpath(document, CLASSPATHENTRY_PATH + string + "']/attributes");
-    }
+	private Node evaluateXpath(Document document, String xpath) throws XPathExpressionException {
+		return (Node) xPathFactory.newXPath().compile(xpath).evaluate(document, XPathConstants.NODE);
+	}
 
-    private Node evaluateXpath(Document document, String xpath) throws XPathExpressionException {
-        return (Node) xPathFactory.newXPath().compile(xpath).evaluate(document, XPathConstants.NODE);
-    }
+	private static Element createIgnoreAttribute(Document document) {
+		Element element = document.createElement("attribute");
+		element.setAttribute("name", "ignore_optional_problems");
+		element.setAttribute("value", "true");
+		return element;
+	}
 
-    private static Element createIgnoreAttribute(Document document) {
-        Element element = document.createElement("attribute");
-        element.setAttribute("name", "ignore_optional_problems");
-        element.setAttribute("value", "true");
-        return element;
-    }
-
-    private static void writeToFile(File file, Document document) throws TransformerException {
-        TransformerFactory transformerFactory = TransformerFactory.newInstance();
-        Transformer transformer = transformerFactory.newTransformer();
-        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
-        transformer.setOutputProperty(OutputKeys.METHOD, "xml");
-        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-        transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-        transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
-        DOMSource source = new DOMSource(document);
-        StreamResult result = new StreamResult(file);
-        transformer.transform(source, result);
-    }
+	private static void writeToFile(File file, Document document) throws TransformerException {
+		TransformerFactory transformerFactory = TransformerFactory.newInstance();
+		Transformer transformer = transformerFactory.newTransformer();
+		transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
+		transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+		transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+		transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+		transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+		DOMSource source = new DOMSource(document);
+		StreamResult result = new StreamResult(file);
+		transformer.transform(source, result);
+	}
+}
 }
