@@ -29,6 +29,7 @@
 						<configuration>
 							<ignorePaths>
 								<ignorePath>src/test/java</ignorePath>
+								<ignorePath>src/test/javaWithoutAttributes</ignorePath>
 							</ignorePaths>
 						</configuration>
 					</execution>

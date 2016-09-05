@@ -4,6 +4,7 @@ import javax.xml.parsers.DocumentBuilderFactory
 def classpath = new File(basedir, ".classpath").getText()
 
 assert processXml(classpath, "//classpathentry[@path='src/test/java']/attributes/attribute[@name='ignore_optional_problems']") != null
+assert processXml(classpath, "//classpathentry[@path='src/test/javaWithoutAttributes']/attributes/attribute[@name='ignore_optional_problems']") != null
 
 
 def processXml( String xml, String xpathQuery ) {
