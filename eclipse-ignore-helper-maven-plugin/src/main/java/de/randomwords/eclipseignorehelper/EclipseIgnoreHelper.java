@@ -32,6 +32,8 @@ import org.w3c.dom.Node;
 @Mojo(name = "ignorePaths", defaultPhase = LifecyclePhase.PROCESS_SOURCES)
 public class EclipseIgnoreHelper extends AbstractMojo {
 
+    private static final String CLASSPATHENTRY_PATH = "//classpathentry[@path='";
+
     @Parameter(property = "ignorePaths", required = true)
     private List<String> ignorePaths;
 
@@ -47,7 +49,7 @@ public class EclipseIgnoreHelper extends AbstractMojo {
     public void execute() throws MojoExecutionException {
         getLog().info("Processing: " + classpathFile.toString());
 
-        if ((classpathFile != null) && classpathFile.exists()) {
+        if (classpathFile.exists()) {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             try {
                 DocumentBuilder builder = factory.newDocumentBuilder();
@@ -79,7 +81,7 @@ public class EclipseIgnoreHelper extends AbstractMojo {
         Node attributes = findAttributesNode(document, string);
         // xpath checking already existing element
         Node attributeIgnore = evaluateXpath(document,
-                "//classpathentry[@path='" + string + "']/attributes/attribute[@name='ignore_optional_problems']");
+                CLASSPATHENTRY_PATH + string + "']/attributes/attribute[@name='ignore_optional_problems']");
 
         // only add
         if (attributeIgnore != null) {
@@ -88,7 +90,7 @@ public class EclipseIgnoreHelper extends AbstractMojo {
         } else {
             if (attributes == null) {
                 getLog().debug("No additional attributes are currently set for " + string);
-                evaluateXpath(document, "//classpathentry[@path='" + string + "']")
+                evaluateXpath(document, CLASSPATHENTRY_PATH + string + "']")
                         .appendChild(document.createElement("attributes"));
                 attributes = findAttributesNode(document, string);
             }
@@ -97,7 +99,7 @@ public class EclipseIgnoreHelper extends AbstractMojo {
     }
 
     private Node findAttributesNode(Document document, String string) throws XPathExpressionException {
-        return evaluateXpath(document, "//classpathentry[@path='" + string + "']/attributes");
+        return evaluateXpath(document, CLASSPATHENTRY_PATH + string + "']/attributes");
     }
 
     private Node evaluateXpath(Document document, String xpath) throws XPathExpressionException {
