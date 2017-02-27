@@ -6,7 +6,6 @@ import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
@@ -25,7 +24,6 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.xml.sax.SAXException;
 
 /**
  * This goal will changed the .classpath file of eclipse to ignore compiler
@@ -33,8 +31,6 @@ import org.xml.sax.SAXException;
  */
 @Mojo(name = "ignorePaths", defaultPhase = LifecyclePhase.PROCESS_SOURCES)
 public class EclipseIgnoreHelper extends AbstractMojo {
-
-    private static final String ERROR_PARSING_CLASSPATH_FILE = "error parsing .classpath file (";
 
     private static final String CLASSPATHENTRY_PATH = "//classpathentry[@path='";
 
@@ -59,22 +55,14 @@ public class EclipseIgnoreHelper extends AbstractMojo {
                 DocumentBuilder builder = factory.newDocumentBuilder();
                 Document document = builder.parse(classpathFile);
 
-                for (String string : ignorePaths) {
-                    addIgnoreAttribute(document, string);
+                for (String path2Ignore : ignorePaths) {
+                    addIgnoreAttribute(document, path2Ignore);
                 }
 
                 writeToFile(classpathFile, document);
 
-            } catch (TransformerException e) {
-                throw new MojoExecutionException(ERROR_PARSING_CLASSPATH_FILE + classpathFile + ")", e);
-            } catch (XPathExpressionException e) {
-                throw new MojoExecutionException(ERROR_PARSING_CLASSPATH_FILE + classpathFile + ")", e);
-            } catch (IOException e) {
-                throw new MojoExecutionException(ERROR_PARSING_CLASSPATH_FILE + classpathFile + ")", e);
-            } catch (SAXException e) {
-                throw new MojoExecutionException(ERROR_PARSING_CLASSPATH_FILE + classpathFile + ")", e);
-            } catch (ParserConfigurationException e) {
-                throw new MojoExecutionException(ERROR_PARSING_CLASSPATH_FILE + classpathFile + ")", e);
+            } catch (Exception e) {
+                throw new MojoExecutionException("error parsing .classpath file (" + classpathFile + ")", e);
             }
         } else {
             if (!ignoreNotEclipseProjects) {
@@ -86,25 +74,29 @@ public class EclipseIgnoreHelper extends AbstractMojo {
         }
     }
 
-    private void addIgnoreAttribute(Document document, String string)
+    private void addIgnoreAttribute(Document document, String path2Ignore)
             throws XPathExpressionException, IOException, TransformerException {
 
         // entry with matching path
-        Node attributes = findAttributesNode(document, string);
+        Node attributes = findAttributesNode(document, path2Ignore);
         // xpath checking already existing element
         Node attributeIgnore = evaluateXpath(document,
-                CLASSPATHENTRY_PATH + string + "']/attributes/attribute[@name='ignore_optional_problems']");
+                CLASSPATHENTRY_PATH + path2Ignore + "']/attributes/attribute[@name='ignore_optional_problems']");
 
         // only add
         if (attributeIgnore != null) {
-            getLog().info("Path " + string + " is already set to ignore warnings");
+            getLog().info("Path " + path2Ignore + " is already set to ignore warnings");
             return;
         } else {
             if (attributes == null) {
-                getLog().debug("No additional attributes are currently set for " + string);
-                evaluateXpath(document, CLASSPATHENTRY_PATH + string + "']")
-                        .appendChild(document.createElement("attributes"));
-                attributes = findAttributesNode(document, string);
+                getLog().debug("No additional attributes are currently set for " + path2Ignore);
+                Node node = evaluateXpath(document, CLASSPATHENTRY_PATH + path2Ignore + "']");
+                if (node == null) {
+                    getLog().info("Node does not exist in .classpath. Will be ignored for new.");
+                    return;
+                }
+                node.appendChild(document.createElement("attributes"));
+                attributes = findAttributesNode(document, path2Ignore);
             }
             attributes.appendChild(createIgnoreAttribute(document));
         }

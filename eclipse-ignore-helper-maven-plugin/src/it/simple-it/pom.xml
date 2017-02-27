@@ -30,6 +30,7 @@
 							<ignorePaths>
 								<ignorePath>src/test/java</ignorePath>
 								<ignorePath>src/test/javaWithoutAttributes</ignorePath>
+								<ignorePath>src/test/pathNotExists</ignorePath>
 							</ignorePaths>
 						</configuration>
 					</execution>
