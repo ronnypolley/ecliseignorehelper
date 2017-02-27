@@ -299,14 +299,23 @@
 					<plugin>
 						<groupId>org.pitest</groupId>
 						<artifactId>pitest-maven</artifactId>
-						<version>1.1.11</version>
-						<configuration>
-							<outputFormats>
-								<outputFormat>xml</outputFormat>
-								<outputFormat>html</outputFormat>
-							</outputFormats>
-							<withHistory>false</withHistory>
-						</configuration>
+						<version>1.1.10</version>
+						<executions>
+							<execution>
+								<goals>
+									<goal>mutationCoverage</goal>
+								</goals>
+								<inherited>false</inherited>
+								<configuration>
+									<outputFormats>
+										<outputFormat>xml</outputFormat>
+										<outputFormat>html</outputFormat>
+									</outputFormats>
+									<withHistory>false</withHistory>
+									<timestampedReports>false</timestampedReports>
+								</configuration>
+							</execution>
+						</executions>
 					</plugin>
 				</plugins>
 			</build>
