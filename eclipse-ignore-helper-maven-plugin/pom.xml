@@ -4,7 +4,7 @@
 
 	<groupId>de.randomwords</groupId>
 	<artifactId>eclipse-ignore-helper-maven-plugin</artifactId>
-	<version>1.0.1-SNAPSHOT</version>
+	<version>1.0.3-SNAPSHOT</version>
 	<packaging>maven-plugin</packaging>
 
 	<name>Eclipse Ignore Helper Maven Plugin</name>
