@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
@@ -24,6 +25,7 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.xml.sax.SAXException;
 
 /**
  * This goal will changed the .classpath file of eclipse to ignore compiler
@@ -31,6 +33,10 @@ import org.w3c.dom.Node;
  */
 @Mojo(name = "ignorePaths", defaultPhase = LifecyclePhase.PROCESS_SOURCES)
 public class EclipseIgnoreHelper extends AbstractMojo {
+
+    private static final String ERROR_PARSING_CLASSPATH_FILE = "error parsing .classpath file (";
+
+    private static final String CLASSPATHENTRY_PATH = "//classpathentry[@path='";
 
     @Parameter(property = "ignorePaths", required = true)
     private List<String> ignorePaths;
@@ -47,7 +53,7 @@ public class EclipseIgnoreHelper extends AbstractMojo {
     public void execute() throws MojoExecutionException {
         getLog().info("Processing: " + classpathFile.toString());
 
-        if ((classpathFile != null) && classpathFile.exists()) {
+        if (classpathFile.exists()) {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             try {
                 DocumentBuilder builder = factory.newDocumentBuilder();
@@ -59,8 +65,16 @@ public class EclipseIgnoreHelper extends AbstractMojo {
 
                 writeToFile(classpathFile, document);
 
-            } catch (Exception e) {
-                throw new MojoExecutionException("error parsing .classpath file (" + classpathFile + ")", e);
+            } catch (TransformerException e) {
+                throw new MojoExecutionException(ERROR_PARSING_CLASSPATH_FILE + classpathFile + ")", e);
+            } catch (XPathExpressionException e) {
+                throw new MojoExecutionException(ERROR_PARSING_CLASSPATH_FILE + classpathFile + ")", e);
+            } catch (IOException e) {
+                throw new MojoExecutionException(ERROR_PARSING_CLASSPATH_FILE + classpathFile + ")", e);
+            } catch (SAXException e) {
+                throw new MojoExecutionException(ERROR_PARSING_CLASSPATH_FILE + classpathFile + ")", e);
+            } catch (ParserConfigurationException e) {
+                throw new MojoExecutionException(ERROR_PARSING_CLASSPATH_FILE + classpathFile + ")", e);
             }
         } else {
             if (!ignoreNotEclipseProjects) {
@@ -79,7 +93,7 @@ public class EclipseIgnoreHelper extends AbstractMojo {
         Node attributes = findAttributesNode(document, string);
         // xpath checking already existing element
         Node attributeIgnore = evaluateXpath(document,
-                "//classpathentry[@path='" + string + "']/attributes/attribute[@name='ignore_optional_problems']");
+                CLASSPATHENTRY_PATH + string + "']/attributes/attribute[@name='ignore_optional_problems']");
 
         // only add
         if (attributeIgnore != null) {
@@ -88,7 +102,7 @@ public class EclipseIgnoreHelper extends AbstractMojo {
         } else {
             if (attributes == null) {
                 getLog().debug("No additional attributes are currently set for " + string);
-                evaluateXpath(document, "//classpathentry[@path='" + string + "']")
+                evaluateXpath(document, CLASSPATHENTRY_PATH + string + "']")
                         .appendChild(document.createElement("attributes"));
                 attributes = findAttributesNode(document, string);
             }
@@ -97,7 +111,7 @@ public class EclipseIgnoreHelper extends AbstractMojo {
     }
 
     private Node findAttributesNode(Document document, String string) throws XPathExpressionException {
-        return evaluateXpath(document, "//classpathentry[@path='" + string + "']/attributes");
+        return evaluateXpath(document, CLASSPATHENTRY_PATH + string + "']/attributes");
     }
 
     private Node evaluateXpath(Document document, String xpath) throws XPathExpressionException {
