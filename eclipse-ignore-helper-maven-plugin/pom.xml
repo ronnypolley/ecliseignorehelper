@@ -3,7 +3,7 @@
 
 	<groupId>de.randomwords</groupId>
 	<artifactId>eclipse-ignore-helper-maven-plugin</artifactId>
-	<version>1.0.4</version>
+	<version>1.0.5-SNAPSHOT</version>
 	<packaging>maven-plugin</packaging>
 
 	<name>Eclipse Ignore Helper Maven Plugin</name>
@@ -14,7 +14,7 @@
 		<connection>https://github.com/ronnypolley/ecliseignorehelper.git</connection>
 		<developerConnection>scm:git:ssh://git@github.com:/ronnypolley/ecliseignorehelper.git</developerConnection>
 		<url>https://github.com/ronnypolley/ecliseignorehelper</url>
-	  <tag>v_1.0.4</tag>
+	  <tag>HEAD</tag>
   </scm>
 
 	<ciManagement>
