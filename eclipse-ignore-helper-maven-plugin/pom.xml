@@ -13,7 +13,7 @@
 
 	<scm>
 		<connection>https://github.com/ronnypolley/ecliseignorehelper.git</connection>
-		<developerConnection>scm:ssh:git@github.com:ronnypolley/ecliseignorehelper.git</developerConnection>
+		<developerConnection>scm:git:ssh://git@github.com:ronnypolley/ecliseignorehelper.git</developerConnection>
 		<url>https://github.com/ronnypolley/ecliseignorehelper</url>
 	</scm>
 
