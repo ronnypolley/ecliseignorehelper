@@ -1,10 +1,9 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>de.randomwords</groupId>
 	<artifactId>eclipse-ignore-helper-maven-plugin</artifactId>
-	<version>1.0.4-SNAPSHOT</version>
+	<version>1.0.4</version>
 	<packaging>maven-plugin</packaging>
 
 	<name>Eclipse Ignore Helper Maven Plugin</name>
@@ -15,7 +14,8 @@
 		<connection>https://github.com/ronnypolley/ecliseignorehelper.git</connection>
 		<developerConnection>scm:git:ssh://git@github.com:/ronnypolley/ecliseignorehelper.git</developerConnection>
 		<url>https://github.com/ronnypolley/ecliseignorehelper</url>
-	</scm>
+	  <tag>v_1.0.4</tag>
+  </scm>
 
 	<ciManagement>
 		<system>http://jenkins.random-words.de/</system>
@@ -194,7 +194,7 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<ignore></ignore>
+										<ignore />
 									</action>
 								</pluginExecution>
 								<pluginExecution>
@@ -214,7 +214,7 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<ignore></ignore>
+										<ignore />
 									</action>
 								</pluginExecution>
 							</pluginExecutions>
