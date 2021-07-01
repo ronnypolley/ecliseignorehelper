@@ -36,7 +36,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<!-- java version -->
-		<java.version>1.6</java.version>
+		<java.version>1.8</java.version>
 	</properties>
 
 	<developers>
@@ -323,16 +323,20 @@
 	</profiles>
 
 	<distributionManagement>
-		<snapshotRepository>
-			<id>snapshot nexus</id>
-			<name>Random Words Snapshot Repository</name>
-			<url>http://nexus.random-words.de/repository/maven-snapshots/</url>
-		</snapshotRepository>
 		<repository>
-			<id>release nexus</id>
-			<name>Random Words Release Repository</name>
-			<url>http://nexus.random-words.de/repository/maven-releases/</url>
+			<uniqueVersion>false</uniqueVersion>
+			<id>FleetBoardReleases</id>
+			<name>Maven Local Nexus Maven Repository for Fleetboard release artefacts</name>
+			<url>http://repository.fleetboard.dmz:8081/content/repositories/releases/</url>
+			<layout>default</layout>
 		</repository>
+		<snapshotRepository>
+			<uniqueVersion>true</uniqueVersion>
+			<id>FleetBoardSnapshots</id>
+			<name>Maven Local Nexus Maven Repository for Fleetboard snapshots artefacts</name>
+			<url>http://repository.fleetboard.dmz:8081/content/repositories/snapshots/</url>
+			<layout>default</layout>
+		</snapshotRepository>
 	</distributionManagement>
 
 </project>
