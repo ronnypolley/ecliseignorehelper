@@ -86,7 +86,6 @@ public class EclipseIgnoreHelper extends AbstractMojo {
         // only add
         if (attributeIgnore != null) {
             getLog().info("Path " + path2Ignore + " is already set to ignore warnings");
-            return;
         } else {
             if (attributes == null) {
                 getLog().debug("No additional attributes are currently set for " + path2Ignore);
