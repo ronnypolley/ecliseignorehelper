@@ -53,8 +53,8 @@ public class EclipseIgnoreHelper extends AbstractMojo {
         if (classpathFile.exists()) {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             try {
-            	factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
-            	factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
+            	factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+            	factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
                 DocumentBuilder builder = factory.newDocumentBuilder();
                 Document document = builder.parse(classpathFile);
 
