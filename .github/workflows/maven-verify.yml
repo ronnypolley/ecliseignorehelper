@@ -44,7 +44,7 @@ jobs:
         restore-keys: ${{ runner.os }}-m2
     - name: Analyze
       env:
-        JAVA_HOME: JAVA_HOME_11_X64
+        JAVA_HOME: ${{ env.JAVA_HOME_11_X64 }}
         GITHUB_TOKEN: ${{ secrets.SUREFIRE_TOKEN }}  # Needed to get PR information, if any
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       run: mvn -B org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=ronnypolley_ecliseignorehelper
