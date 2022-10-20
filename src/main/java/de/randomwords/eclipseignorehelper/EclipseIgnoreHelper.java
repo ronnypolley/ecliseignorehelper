@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -52,6 +53,8 @@ public class EclipseIgnoreHelper extends AbstractMojo {
         if (classpathFile.exists()) {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             try {
+            	factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+            	factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
                 DocumentBuilder builder = factory.newDocumentBuilder();
                 Document document = builder.parse(classpathFile);
 
@@ -118,6 +121,8 @@ public class EclipseIgnoreHelper extends AbstractMojo {
 
     private static void writeToFile(File file, Document document) throws TransformerException {
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+        transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
         Transformer transformer = transformerFactory.newTransformer();
         transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
         transformer.setOutputProperty(OutputKeys.METHOD, "xml");
