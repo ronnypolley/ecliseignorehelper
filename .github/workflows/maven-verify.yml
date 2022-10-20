@@ -18,7 +18,9 @@ jobs:
     - name: Set up JDK 8
       uses: actions/setup-java@v3
       with:
-        java-version: '8'
+        java-version: |
+          8
+          11
         distribution: 'temurin'
         cache: maven
     - name: Build with Maven
@@ -42,6 +44,7 @@ jobs:
         restore-keys: ${{ runner.os }}-m2
     - name: Analyze
       env:
+        JAVA_HOME: JAVA_HOME_{{ 11 }}_{{ x64 }}
         GITHUB_TOKEN: ${{ secrets.SUREFIRE_TOKEN }}  # Needed to get PR information, if any
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       run: mvn -B org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=ronnypolley_ecliseignorehelper
