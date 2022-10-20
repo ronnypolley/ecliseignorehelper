@@ -75,7 +75,7 @@ public class EclipseIgnoreHelper extends AbstractMojo {
     }
 
     private void addIgnoreAttribute(Document document, String path2Ignore)
-            throws XPathExpressionException, IOException, TransformerException {
+            throws XPathExpressionException {
 
         // entry with matching path
         Node attributes = findAttributesNode(document, path2Ignore);
