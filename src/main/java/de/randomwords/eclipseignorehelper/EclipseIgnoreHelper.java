@@ -1,9 +1,9 @@
 package de.randomwords.eclipseignorehelper;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -52,6 +52,8 @@ public class EclipseIgnoreHelper extends AbstractMojo {
         if (classpathFile.exists()) {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             try {
+            	factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+            	factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
                 DocumentBuilder builder = factory.newDocumentBuilder();
                 Document document = builder.parse(classpathFile);
 
@@ -75,7 +77,7 @@ public class EclipseIgnoreHelper extends AbstractMojo {
     }
 
     private void addIgnoreAttribute(Document document, String path2Ignore)
-            throws XPathExpressionException, IOException, TransformerException {
+            throws XPathExpressionException {
 
         // entry with matching path
         Node attributes = findAttributesNode(document, path2Ignore);
@@ -86,7 +88,6 @@ public class EclipseIgnoreHelper extends AbstractMojo {
         // only add
         if (attributeIgnore != null) {
             getLog().info("Path " + path2Ignore + " is already set to ignore warnings");
-            return;
         } else {
             if (attributes == null) {
                 getLog().debug("No additional attributes are currently set for " + path2Ignore);
@@ -119,6 +120,8 @@ public class EclipseIgnoreHelper extends AbstractMojo {
 
     private static void writeToFile(File file, Document document) throws TransformerException {
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+        transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
         Transformer transformer = transformerFactory.newTransformer();
         transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
         transformer.setOutputProperty(OutputKeys.METHOD, "xml");
