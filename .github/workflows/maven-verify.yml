@@ -5,6 +5,7 @@ name: Java CI with Maven
 
 permissions:
   pull-requests: write
+  statuses: write
 
 on:
   push:
