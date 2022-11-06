@@ -3,6 +3,9 @@
 
 name: Java CI with Maven
 
+permissions:
+  pull-requests: write
+
 on:
   push:
   pull_request:
