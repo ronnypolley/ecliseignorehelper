@@ -29,10 +29,10 @@ jobs:
       if: ${{ always() }}
       uses: scacap/action-surefire-report@v1
       env:
-        github_token: ${{ secrets.SUREFIRE_TOKEN }}
+        github_token: ${{ secrets.GITHUB_TOKEN }}
     - name: Analyze with SonarCloud.io
       env:
         JAVA_HOME: ${{ env.JAVA_HOME_11_X64 }}
-        GITHUB_TOKEN: ${{ secrets.SUREFIRE_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       run: mvn -B org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=ronnypolley_ecliseignorehelper
