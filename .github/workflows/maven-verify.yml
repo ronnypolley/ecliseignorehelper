@@ -42,4 +42,4 @@ jobs:
         JAVA_HOME: ${{ env.JAVA_HOME_11_X64 }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: mvn -B org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.organization=ronnypolley -Dsonar.projectKey=ronnypolley_ecliseignorehelper
+      run: mvn -B org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=ronnypolley_ecliseignorehelper
