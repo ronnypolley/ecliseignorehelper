@@ -37,8 +37,6 @@ jobs:
       uses: scacap/action-surefire-report@v1
       env:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-    - name: Debug Secret
-      run: echo ${{secrets.SONAR_TOKEN }} | sed 's/./& /g'
     - name: Analyze with SonarCloud.io
       env:
         JAVA_HOME: ${{ env.JAVA_HOME_11_X64 }}
