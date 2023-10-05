@@ -45,5 +45,4 @@ jobs:
       env:
         JAVA_HOME: ${{ env.JAVA_HOME_11_X64 }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: mvn -ntp -B org.sonarsource.scanner.maven:sonar-maven-plugin:sonar    
+      run: mvn -ntp -B org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.token=${{ secrets.SONAR_TOKEN }}
