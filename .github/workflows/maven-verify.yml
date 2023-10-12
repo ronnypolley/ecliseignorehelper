@@ -12,6 +12,7 @@ permissions:
 
 on:
   push:
+    branches-ignore: [ "main" ]
   pull_request_target:
     types: [assigned, opened, synchronize, reopened]
     branches: [ "main"]
@@ -22,7 +23,6 @@ jobs:
   build:
     name: build eclipse-ignore-helper plugin
     runs-on: ubuntu-latest
-
 
     steps:
     - uses: actions/checkout@v3
