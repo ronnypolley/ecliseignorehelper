@@ -3,7 +3,10 @@
 
 name: Build Eclipse Ignore Helper
 
-on: [push]
+on: 
+  push:
+  pull_request_target:
+    types: [labeled]
 
 jobs:
   build:
@@ -27,11 +30,12 @@ jobs:
     - name: Run Integration Tests
       run: mvn -B -Prun-its verify -ntp --file pom.xml
     - name: Publish Test Report
-      if: ${{ always() }}
+      if: contains(github.event.pull_request.labels.*.name, 'save to build') || github.event_name == 'push'
       uses: scacap/action-surefire-report@v1
       env:
         github_token: ${{ secrets.GITHUB_TOKEN }}
     - name: Analyze with SonarCloud.io
+      if: contains(github.event.pull_request.labels.*.name, 'save to build') || github.event_name == 'push'
       env:
         JAVA_HOME: ${{ env.JAVA_HOME_11_X64 }}
       run: mvn -ntp -B org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.token=${{ secrets.SONAR_TOKEN }}
