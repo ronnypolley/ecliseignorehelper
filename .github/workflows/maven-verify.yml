@@ -10,18 +10,12 @@ permissions:
     security-events: read
     statuses: read
 
-on:
-  push:
-    branches-ignore: [ "main" ]
-  pull_request_target:
-    types: [assigned, opened, synchronize, reopened, labeled]
-    branches: [ "main"]
+on: [push]
 
 jobs:
   build:
     name: build eclipse-ignore-helper plugin
     runs-on: ubuntu-latest
-    if: (contains(github.event_name, 'push') && !contains(github.event.pull_request.labels.*.name, 'safe to test') || contains(github.event.pull_request.labels.*.name, 'safe to test'))
 
     steps:
     - uses: actions/checkout@v3
