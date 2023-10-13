@@ -6,7 +6,7 @@ name: Build Eclipse Ignore Helper
 on: 
   push:
   pull_request_target:
-    types: [labeled]
+    types: [labeled, synchronize]
 
 jobs:
   build:
