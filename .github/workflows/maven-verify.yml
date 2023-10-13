@@ -14,7 +14,7 @@ on: [push]
 
 jobs:
   build:
-    name: build eclipse-ignore-helper plugin
+    name: build and check
     runs-on: ubuntu-latest
 
     steps:
