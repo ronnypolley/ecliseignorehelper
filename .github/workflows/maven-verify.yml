@@ -1,26 +1,13 @@
 # This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
 # For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
 
-name: Java CI with Maven
+name: Build Eclipse Ignore Helper
 
-permissions:
-    checks: write
-    contents: read
-    pull-requests: write
-    security-events: read
-    statuses: read
-
-on:
-  push:
-  pull_request_target:
-    types: [assigned, opened, synchronize, reopened]
-    branches: [ "main"]
-  pull_request:
-    branches: [ "main" ]
+on: [push]
 
 jobs:
   build:
-    name: build eclipse-ignore-helper plugin
+    name: build and check
     runs-on: ubuntu-latest
 
     steps:
@@ -47,5 +34,4 @@ jobs:
     - name: Analyze with SonarCloud.io
       env:
         JAVA_HOME: ${{ env.JAVA_HOME_11_X64 }}
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: mvn -ntp -B org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.token=${{ secrets.SONAR_TOKEN }}
