@@ -21,7 +21,7 @@ jobs:
   build:
     name: build eclipse-ignore-helper plugin
     runs-on: ubuntu-latest
-    if: contains(github.event_name, 'push') && !contains(github.event.pull_request.labels.*.name, 'safe to test')
+    if: (contains(github.event_name, 'push') && !contains(github.event.pull_request.labels.*.name, 'safe to test') || contains(github.event.pull_request.labels.*.name, 'safe to test'))
 
     steps:
     - uses: actions/checkout@v3
