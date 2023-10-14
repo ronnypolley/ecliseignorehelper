@@ -3,6 +3,14 @@
 This project is a Apache Maven plugin, which can be used to make the Eclipse IDE ignore some warnings on (generated) code.
 Using the Eclipse IDE buildin functionality of ignore unwanted warnings on some folders in the classpath, this plugin adds the desired folders to the .classpath file.
 
+## Quality status
+
+Displays the quality state of the `main`-branch from SonarQube.io:
+
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=ronnypolley_ecliseignorehelper&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=ronnypolley_ecliseignorehelper)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=ronnypolley_ecliseignorehelper&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=ronnypolley_ecliseignorehelper)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=ronnypolley_ecliseignorehelper&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=ronnypolley_ecliseignorehelper)
+
 ## Usage
 
 Simply add the plugin to our `pom.xml`, like
