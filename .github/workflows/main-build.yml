@@ -12,7 +12,7 @@ jobs:
   build:
     name: build and check
     runs-on: ubuntu-latest
-    if: (contains(github.event.pull_request.labels.*.name, 'PR save to build') && github.event_name != 'push') || (github.event_name == 'push' && github.event.pull_request.id <= 0)
+    if: (contains(github.event.pull_request.labels.*.name, 'PR save to build') && github.event_name != 'push') || (github.event_name == 'push' && github.event.pull_request.action != '')
 
     steps:
     - uses: actions/checkout@v3
