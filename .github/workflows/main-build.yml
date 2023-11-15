@@ -5,6 +5,13 @@ name: Build Eclipse Ignore Helper
 
 on: 
   push:
+  workflow_dispatch: 
+    inputs:
+      debugMaven:
+        required: true
+        default: false
+        type: boolean
+        description: Debug Maven
 
 env:
   GITHUB_DEPLOY_TOKEN: ${{secrets.GITHUB_TOKEN}}
@@ -91,6 +98,12 @@ jobs:
         cache: maven
         server-username: ${{ github.repository_owner }}
     - name: Deploy artifact
+      if: ${{!inputs.debugMaven}}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
-      run: mvn -B deploy -ntp --file pom.xml
+      run: mvn -B deploy -ntp --file pom.xml 
+    - name: Deploy artifact with debug enabled
+      if: ${{inputs.debugMaven}}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+      run: mvn -B deploy -ntp --file pom.xml 
