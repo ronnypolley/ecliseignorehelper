@@ -91,4 +91,6 @@ jobs:
         cache: maven
         server-username: ${{ github.repository_owner }}
     - name: Deploy artifact
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
       run: mvn -B deploy -ntp --file pom.xml
