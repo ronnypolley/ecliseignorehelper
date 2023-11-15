@@ -6,6 +6,9 @@ name: Build Eclipse Ignore Helper
 on: 
   push:
 
+permissions: 
+  packages: write
+
 jobs:
   build_and_unit_test:
     name: Build and unit test
