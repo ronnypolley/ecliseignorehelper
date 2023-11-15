@@ -89,5 +89,6 @@ jobs:
         java-version: 17
         distribution: 'temurin'
         cache: maven
+        server-username: ${{ github.repository_owner }}
     - name: Deploy artifact
-      run: mvn -B deploy -ntp --file pom.xml --settings .github/workflows/mvn-settings.xml
+      run: mvn -B deploy -ntp --file pom.xml
