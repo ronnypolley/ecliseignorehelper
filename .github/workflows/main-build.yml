@@ -90,4 +90,4 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Deploy artifact
-      run: mvn -B deploy -ntp --file pom.xml --settings mvn-settings.xml
+      run: mvn -B deploy -ntp --file pom.xml --settings .github/workflows/mvn-settings.xml
