@@ -86,4 +86,6 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Deploy artifact
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
       run: mvn -B deploy -ntp --file pom.xml
