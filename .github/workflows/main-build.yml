@@ -6,9 +6,6 @@ name: Build Eclipse Ignore Helper
 on: 
   push:
 
-permissions: 
-  packages: write
-
 jobs:
   build_and_unit_test:
     name: Build and unit test
@@ -90,5 +87,5 @@ jobs:
         cache: maven
     - name: Deploy artifact
       env:
-        GITHUB_TOKEN: ${{ github.token }}
+        GITHUB_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
       run: mvn -B deploy -ntp --file pom.xml
