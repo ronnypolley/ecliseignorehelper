@@ -7,30 +7,34 @@ on:
   push:
 
 jobs:
-  build:
-    name: build and check
+  build_and_unit_test:
+    name: Build and unit test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+      - name: Build with Maven
+        run: mvn -B verify -ntp --file pom.xml
+
+
+  integration_tests:
+    name: Integration tests
+    needs: build_and_unit_test
     strategy:
       matrix:
-        os: [ ubuntu-latest, windows-latest ]
+        java-version: [8, 11, 17, 21]
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
     runs-on: ${{ matrix.os }}
-    
+
     steps:
     - name: Checkout branch
       uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-    - name: Set up JDK (8 and 17)
+    - name: Set up JDK (${{ matrix.java-version}})
       uses: actions/setup-java@v3
       with:
-        java-version: |
-          8
-          17
+        java-version: ${{ matrix.java-version }}
         distribution: 'temurin'
         cache: maven
-    - name: Build with Maven
-      run: mvn -B verify -ntp --file pom.xml
-    - name: Run PITest Maven
-      run: mvn -B -Ppit-test verify -ntp --file pom.xml
     - name: Run Integration Tests
       run: mvn -B -Prun-its verify -ntp --file pom.xml
     - name: Publish Test Report
@@ -38,9 +42,19 @@ jobs:
       env:
         github_token: ${{ secrets.GITHUB_TOKEN }}
 
+  pitest:
+    name: Permuation tests
+    needs: build_and_unit_test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+      - name: Build with Maven
+        run: mvn -B verify -Ppit-test -ntp --file pom.xml
+
   quality:
     name: Check software quality
-    needs: build
+    needs: [integration_tests, pitest]
     runs-on: ubuntu-latest
 
     steps:
@@ -48,18 +62,14 @@ jobs:
       uses: actions/checkout@v4
       with:
         fetch-depth: 0
-    - name: Set up JDK (8 and 17)
+    - name: Set up JDK 17
       uses: actions/setup-java@v3
       with:
-        java-version: |
-          8
-          17
+        java-version: 17
         distribution: 'temurin'
         cache: maven
-    - name: Publish Test Report
-      uses: scacap/action-surefire-report@v1
-      env:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Analyze with SonarCloud.io
+      run: mvn -ntp -B org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.token=${{ secrets.SONAR_TOKEN }}
   
   deploy:
     name: Deploy artifact to GitHub packages
@@ -67,13 +77,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Set up JDK (8 and 17)
+    - name: Set up JDK 17
       uses: actions/setup-java@v3
       with:
-        java-version: |
-          8
-          17
+        java-version: 17
         distribution: 'temurin'
-        cache: maven  
+        cache: maven
     - name: Deploy artifact
       run: mvn -B deploy -ntp --file pom.xml
