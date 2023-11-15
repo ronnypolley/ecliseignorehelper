@@ -295,7 +295,7 @@
 		<repository>
 			<id>github</id>
 			<name>GitHub OWNER Apache Maven Packages</name>
-			<url>https://maven.pkg.github.com/ronnypolley/eclipse-ignore-helper</url>
+			<url>https://maven.pkg.github.com/ronnypolley/eclipse-ignore-helper-maven-plugin</url>
 			<snapshots>
             	<enabled>true</enabled>
           	</snapshots>
