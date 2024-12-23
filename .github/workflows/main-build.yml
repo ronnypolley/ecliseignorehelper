@@ -3,17 +3,20 @@
 
 name: Build Eclipse Ignore Helper
 
-on: 
+on:
   push:
-  pull_request_target:
-    types: [labeled, synchronize]
+    branches: 
+      - 'main'
+  pull_request:
 
 jobs:
   build:
     name: build and check
     runs-on: ubuntu-latest
-    if: (contains(github.event.pull_request.labels.*.name, 'PR save to build') && github.event_name != 'push') || (github.event_name == 'push' && github.event.pull_request.action == '')
-
+    permissions:
+      checks: write
+      contents: read
+      
     steps:
     - name: Checkout branch
       uses: actions/checkout@v4
