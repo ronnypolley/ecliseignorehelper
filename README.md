@@ -1,5 +1,8 @@
 # Eclipse Ignore Helper Maven Plugin
 
+[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/11316/badge)](https://www.bestpractices.dev/projects/11316)
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/ronnypolley/ecliseignorehelper/badge)](https://scorecard.dev/viewer/?uri=github.com/ronnypolley/ecliseignorehelper)
+
 This project is a Apache Maven plugin, which can be used to make the Eclipse IDE ignore some warnings on (generated) code.
 Using the Eclipse IDE buildin functionality of ignore unwanted warnings on some folders in the classpath, this plugin adds the desired folders to the .classpath file.
 
