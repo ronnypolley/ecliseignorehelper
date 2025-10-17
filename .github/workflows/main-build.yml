@@ -19,12 +19,12 @@ jobs:
       
     steps:
     - name: Checkout branch
-      uses: actions/checkout@v5
+      uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       with:
         fetch-depth: 0
         
     - name: Set up JDK (8 and 17)
-      uses: actions/setup-java@v5
+      uses: actions/setup-java@dded0888837ed1f317902acf8a20df0ad188d165 # v5.0.0
       with:
         java-version: |
           8
@@ -42,7 +42,7 @@ jobs:
       run: mvn -B -Prun-its verify -ntp --file pom.xml
       
     - name: Publish Test Report
-      uses: scacap/action-surefire-report@v1
+      uses: scacap/action-surefire-report@5609ce4db72c09db044803b344a8968fd1f315da # v1.9.1
       env:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         
