@@ -17,7 +17,6 @@ jobs:
     name: build and check
     runs-on: ubuntu-latest
     permissions:
-      checks: write
       contents: read
       
     steps:
@@ -48,11 +47,6 @@ jobs:
       
     - name: Run Integration Tests
       run: mvn -B -Prun-its verify -ntp --file pom.xml
-      
-    - name: Publish Test Report
-      uses: scacap/action-surefire-report@5609ce4db72c09db044803b344a8968fd1f315da # v1.9.1
-      env:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
         
     - name: Analyze with SonarCloud.io
       env:
