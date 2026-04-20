@@ -9,15 +9,22 @@ on:
       - 'main'
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   build:
     name: build and check
     runs-on: ubuntu-latest
     permissions:
-      checks: write
       contents: read
       
     steps:
+    - name: Harden the runner (Audit all outbound calls)
+      uses: step-security/harden-runner@f4a75cfd619ee5ce8d5b864b0d183aff3c69b55a # v2.13.1
+      with:
+        egress-policy: audit
+
     - name: Checkout branch
       uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       with:
@@ -40,11 +47,6 @@ jobs:
       
     - name: Run Integration Tests
       run: mvn -B -Prun-its verify -ntp --file pom.xml
-      
-    - name: Publish Test Report
-      uses: scacap/action-surefire-report@5609ce4db72c09db044803b344a8968fd1f315da # v1.9.1
-      env:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
         
     - name: Analyze with SonarCloud.io
       env:
