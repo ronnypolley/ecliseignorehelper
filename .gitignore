@@ -1,6 +1,10 @@
 /target/
 *~
 *.swp
+
+# IDE related files
 .settings/
 .classpath
 .project
+.idea/
+*.iml
