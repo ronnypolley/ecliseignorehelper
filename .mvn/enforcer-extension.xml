@@ -1,0 +1,13 @@
+<extension>
+    <executions>
+        <execution>
+            <configuration>
+                <rules>
+                    <requireMavenVersion>
+                        <version>3.9.0</version>
+                    </requireMavenVersion>
+                </rules>
+            </configuration>
+        </execution>
+    </executions>
+</extension>
