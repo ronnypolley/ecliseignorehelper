@@ -43,7 +43,7 @@ public class EclipseIgnoreHelper extends AbstractMojo {
     @Parameter(property = "ignoreNotEclipseProjects", defaultValue = "true")
     private boolean ignoreNotEclipseProjects;
 
-    private XPathFactory xPathFactory = XPathFactory.newInstance();
+    private final XPathFactory xPathFactory = XPathFactory.newInstance();
 
     @Override
     public void execute() throws MojoExecutionException {
